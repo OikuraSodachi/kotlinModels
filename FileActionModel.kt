@@ -4,6 +4,7 @@
 import java.io.File
 import java.io.FileInputStream
 import java.text.DecimalFormat
+import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
 import kotlin.math.log10
@@ -225,3 +226,33 @@ fun compressFilesRecursivelyToZip_td(files: Array<File>, zipFile: File) {
 fun isAccessible_td(file: File): Boolean {
     return file.listFiles() != null
 }
+
+/**
+ * Function to get the MimeType from a filename by comparing it's file extension
+ * @author Neeyat Lotlikar
+ * @param filename String name of the file. Can also be a path.
+ * @return String MimeType */
+fun getMimeType_td(filename: String): String = if (filename.lastIndexOf('.') == -1)
+    "resource/folder"
+else
+    when (filename.subSequence(
+        filename.lastIndexOf('.'),
+        filename.length
+    ).toString().lowercase(Locale.ROOT)) {
+        ".doc", ".docx" -> "application/msword"
+        ".pdf" -> "application/pdf"
+        ".ppt", ".pptx" -> "application/vnd.ms-powerpoint"
+        ".xls", ".xlsx" -> "application/vnd.ms-excel"
+        ".zip", ".rar" -> "application/x-wav"
+        ".7z" -> "application/x-7z-compressed"
+        ".rtf" -> "application/rtf"
+        ".wav", ".mp3", ".m4a", ".ogg", ".oga", ".weba" -> "audio/*"
+        ".ogx" -> "application/ogg"
+        ".gif" -> "image/gif"
+        ".jpg", ".jpeg", ".png", ".bmp" -> "image/*"
+        ".csv" -> "text/csv"
+        ".m3u8" -> "application/vnd.apple.mpegurl"
+        ".txt", ".mht", ".mhtml", ".html" -> "text/plain"
+        ".3gp", ".mpg", ".mpeg", ".mpe", ".mp4", ".avi", ".ogv", ".webm" -> "video/*"
+        else -> "*/*"
+    }
