@@ -1,3 +1,4 @@
+
 /** 이 method들은 독립적으로 사용 가능함 */
 
 import java.io.File
@@ -33,23 +34,10 @@ fun readableFileSize_td(size: Long): String {
     ) + " " + units[digitGroups]
 }
 
+
 /** Todokanai
  *
- * 안드로이드에서만 적용 가능?
- */
-fun getPhysicalStorage_td(file: File): String {
-    val path = file.absolutePath
-    val firstSlashIndex = path.indexOf('/')
-    val secondSlashIndex = path.indexOf('/', startIndex = firstSlashIndex + 1)
-    val thirdSlashIndex = path.indexOf('/', startIndex = secondSlashIndex + 1)
-    return if (thirdSlashIndex > secondSlashIndex) {
-        path.substring(secondSlashIndex + 1, thirdSlashIndex)
-    } else {
-        path.substring(secondSlashIndex + 1)
-    }
-}
-
-/** files:Array <<File>> 과 하위 경로의 파일의 크기 합 */
+ * files:Array <<File>> 과 하위 경로의 파일의 크기 합 */
 fun getTotalSize_td(files: Array<File>): Long {
     var totalSize: Long = 0
     for (file in files) {
@@ -159,7 +147,8 @@ fun getFileAndFoldersNumber_td(files:Array<File>):Int{
     return total
 }
 
-/**
+/** Todokanai
+ *
  *  file의 하위 파일/폴더들을 반환
  *
  *  권한 문제 / IOException 발생시에는 로그찍고나서 emptyArray 반환
@@ -227,4 +216,12 @@ fun compressFilesRecursivelyToZip_td(files: Array<File>, zipFile: File) {
     }
     zipOutputStream.close()
     println("파일 압축이 완료되었습니다.")
+}
+
+/** Todokanai
+ *
+ * 경로가 접근 가능할 경우 true 반환
+ * **/
+fun isAccessible_td(file: File): Boolean {
+    return file.listFiles() != null
 }
