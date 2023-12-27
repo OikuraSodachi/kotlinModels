@@ -1,3 +1,4 @@
+
 /**
  * 독립적으로 사용 가능하고, Android 의존성 있는 method 모음
  */
@@ -8,7 +9,11 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.ThumbnailUtils
+import android.net.Uri
+import android.os.Environment
 import android.os.Handler
+import android.os.storage.StorageManager
+import android.provider.Settings
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
 import android.widget.Toast
@@ -20,8 +25,10 @@ import java.io.File
 import java.text.SimpleDateFormat
 import kotlin.system.exitProcess
 
-/**
+/** Todokanai
+ *
  * Application 종료 method
+ *
  * Service가 실행중일 경우 서비스를 실행한 Intent도 입력할것
  */
 fun exit_td(activity: Activity, serviceIntent: Intent? = null){
@@ -118,7 +125,38 @@ fun requestPermission_td(
     }
 }
 
-/** == Toast.makeText(appContext,text,Toast.LENGTH_SHORT).show() **/
+/** Todokanai
+ *
+ * == Toast.makeText(appContext,text,Toast.LENGTH_SHORT).show() **/
 fun ToastShort_td(appContext: Context, text:String){
     Toast.makeText(appContext,text,Toast.LENGTH_SHORT).show()
+}
+
+/** Todokanai
+ *
+ * 기기의 storage 목록 반환 **/
+fun getPhysicalStorages_td(context: Context):List<File>{
+    val defaultStorage = Environment.getExternalStorageDirectory()
+    val volumes = context.getSystemService(StorageManager::class.java)?.storageVolumes
+    val storageList = mutableListOf<File>(defaultStorage)
+    volumes?.forEach { volume ->
+        if (!volume.isPrimary && volume.isRemovable) {
+            val sdCard = volume.directory
+            if (sdCard != null) {
+                storageList.add(sdCard)
+            }
+        }
+    }
+    return storageList
+}
+
+/** Todokanai
+ *
+ * 모든 파일 접근 권한 요청 **/
+fun requestStorageManageAccess_td(activity: Activity){
+    val intent = Intent()
+    intent.action = Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION
+    val uri: Uri = Uri.fromParts("package", activity.packageName, null)
+    intent.data = uri
+    activity.startActivity(intent)
 }
