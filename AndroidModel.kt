@@ -19,6 +19,7 @@ import android.support.v4.media.session.PlaybackStateCompat
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
@@ -159,4 +160,38 @@ fun requestStorageManageAccess_td(activity: Activity){
     val uri: Uri = Uri.fromParts("package", activity.packageName, null)
     intent.data = uri
     activity.startActivity(intent)
+}
+
+/** Todokanai
+ *
+ *  open the file with a compatible application
+ *
+ *  requires ContentProvider
+ *
+ *  onFailure: no application available to open the file, etc...
+ *
+ *  mimeType: Mime type of the given file
+ * **/
+fun openFile_td(
+    context: Context,
+    file: File,
+    mimeType:String,
+    onFailure:()->Unit = {}
+){
+    val intent = Intent()
+    intent.action = Intent.ACTION_VIEW
+    intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+    intent.setDataAndType(
+        FileProvider.getUriForFile(context,
+            "${context.packageName}.provider",
+            file
+        ), mimeType
+    )
+    println("mimeType: $mimeType")
+    try {
+        ActivityCompat.startActivity(context, intent, null)
+    } catch (t:Throwable){
+        println(t)
+        onFailure()
+    }
 }
