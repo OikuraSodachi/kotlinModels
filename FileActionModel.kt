@@ -65,14 +65,17 @@ fun getTotalSize_td(files: Array<File>): Long {
  *  BY_DATE_ASCENDING = 8
  *  BY_DATE_DESCENDING = 9
  * */
-fun sortedFileList_td(sortMode:Int, files:Array<File>):List<File>{
+fun sortedFileList_td(
+    sortMode:Int,
+    files:Array<File>
+):List<File>{
     /** 하위 디렉토리 포함한 크기 */
     fun File.getTotalSize(): Long {
         var size: Long = 0
         if(this.isDirectory) {
-            val files = this.listFiles()
-            if (files != null) {
-                for (file in files) {
+            val listFiles = this.listFiles()
+            if (listFiles != null) {
+                for (file in listFiles) {
                     size += if (file.isDirectory) {
                         file.getTotalSize()
                     } else {
@@ -223,8 +226,12 @@ fun compressFilesRecursivelyToZip_td(files: Array<File>, zipFile: File) {
  *
  * 경로가 접근 가능할 경우 true 반환
  * **/
-fun isAccessible_td(file: File): Boolean {
-    return file.listFiles() != null
+fun isAccessible_td(file: File?): Boolean {
+    if(file == null){
+        return false
+    } else {
+        return file.listFiles() != null
+    }
 }
 
 /**
