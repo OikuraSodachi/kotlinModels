@@ -226,12 +226,8 @@ fun compressFilesRecursivelyToZip_td(files: Array<File>, zipFile: File) {
  *
  * 경로가 접근 가능할 경우 true 반환
  * **/
-fun isAccessible_td(file: File?): Boolean {
-    if(file == null){
-        return false
-    } else {
-        return file.listFiles() != null
-    }
+fun isAccessible_td(file: File): Boolean {
+    return file.listFiles() != null
 }
 
 /**
