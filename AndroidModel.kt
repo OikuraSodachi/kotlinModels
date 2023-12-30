@@ -16,6 +16,8 @@ import android.os.storage.StorageManager
 import android.provider.Settings
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.view.View
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -193,5 +195,34 @@ fun openFile_td(
     } catch (t:Throwable){
         println(t)
         onFailure()
+    }
+}
+
+
+/** Todokanai
+ *
+ *  itemList: List of Pair<( ItemTitle ),( Callback ) >
+ *
+ * **/
+fun popupMenu_td(
+    context: Context,
+    anchor:View,
+    gravity:Int = 0,  // == Gravity.NO_GRAVITY
+    itemList:List<Pair<String,()->Unit>>
+){
+    val popupMenu = PopupMenu(context,anchor,gravity)
+    popupMenu.run {
+        itemList.forEach{
+            menu.add(it.first)
+        }
+        setOnMenuItemClickListener { item ->
+            itemList.forEach{
+                if(item.title == it.first){
+                    it.second()
+                }
+            }
+            false
+        }
+        show()
     }
 }
