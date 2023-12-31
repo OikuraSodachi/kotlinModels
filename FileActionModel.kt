@@ -66,8 +66,8 @@ fun getTotalSize_td(files: Array<File>): Long {
  *  BY_DATE_DESCENDING = 9
  * */
 fun sortedFileList_td(
-    sortMode:Int,
-    files:Array<File>
+    files:Array<File>,
+    sortMode:Int
 ):List<File>{
     /** 하위 디렉토리 포함한 크기 */
     fun File.getTotalSize(): Long {
