@@ -1,4 +1,3 @@
-package com.todokanai.composepractice.compose.presets.image
 
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
