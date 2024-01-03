@@ -1,4 +1,3 @@
-package com.todokanai.composepractice.compose.presets.dropdownmenu
 
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DropdownMenu
