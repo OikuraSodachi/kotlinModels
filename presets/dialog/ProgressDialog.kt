@@ -1,4 +1,3 @@
-package com.todokanai.composepractice.compose.presets.dialog
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
