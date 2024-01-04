@@ -1,4 +1,3 @@
-
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,7 +19,7 @@ fun SelectDialog(
     modifier : Modifier,
     title:String ?= null,
     items: List<Pair<String,()->Unit>>,
-    selectedItem:String,
+    selectedItem:String?,
     onDismissRequest:()->Unit,
     confirmText:String ?=null,
     dismissText:String ?=null,
@@ -34,7 +33,7 @@ fun SelectDialog(
             title?.let{
                 Text(title)
             }
-                },
+        },
         text = {
             LazyColumn() {
                 items(items.size) {
@@ -44,9 +43,9 @@ fun SelectDialog(
                             .padding(0.dp, 2.dp)
                             .clickable { item.second() },
                         verticalAlignment = Alignment.CenterVertically
-                        ) {
+                    ) {
                         RadioButton(
-                            selected = selectedItem.contains(item.first),
+                            selected = selectedItem?.contains(item.first) ?: false,
                             onClick = null,
                             modifier = Modifier
                                 .minimumInteractiveComponentSize()
@@ -59,7 +58,7 @@ fun SelectDialog(
                     }
                 }
             }
-               },
+        },
         confirmButton = {
             onConfirm?.let{
                 Button(
