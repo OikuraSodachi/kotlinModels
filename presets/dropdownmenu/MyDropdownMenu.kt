@@ -12,11 +12,12 @@ import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
 fun MyDropdownMenu(
+    modifier:Modifier = Modifier,
     contents:List<Pair<String,()->Unit>>,
     expanded : MutableState<Boolean>
 ) {
     DropdownMenu(
-        modifier = Modifier.wrapContentSize(),
+        modifier = modifier.wrapContentSize(),
         expanded = expanded.value,
         onDismissRequest = { expanded.value = false }
     ) {
@@ -28,7 +29,6 @@ fun MyDropdownMenu(
         }
     }
 }
-
 @Preview
 @Composable
 private fun DropdownMenuPreview(){
