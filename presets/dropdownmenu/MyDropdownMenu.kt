@@ -1,12 +1,8 @@
-
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
@@ -14,12 +10,14 @@ import androidx.compose.ui.tooling.preview.Preview
 fun MyDropdownMenu(
     modifier:Modifier = Modifier,
     contents:List<Pair<String,()->Unit>>,
-    expanded : MutableState<Boolean>
+    expanded : Boolean,
+    onDismissRequest: () -> Unit
 ) {
+
     DropdownMenu(
         modifier = modifier.wrapContentSize(),
-        expanded = expanded.value,
-        onDismissRequest = { expanded.value = false }
+        expanded = expanded,
+        onDismissRequest = { onDismissRequest() }
     ) {
         contents.forEach {
             DropdownMenuItem(
@@ -29,12 +27,15 @@ fun MyDropdownMenu(
         }
     }
 }
+
+
 @Preview
 @Composable
 private fun DropdownMenuPreview(){
     MyDropdownMenu(
         contents = listOf(Pair("1", {}), Pair("2", {}),Pair("3",{})),
-        expanded = remember {mutableStateOf(true)}
+        expanded = true,
+        onDismissRequest = {}
     )
 }
 
