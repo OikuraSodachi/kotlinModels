@@ -1,4 +1,3 @@
-
 /**
  * 독립적으로 사용 가능하고, Android 의존성 있는 method 모음
  */
@@ -25,7 +24,6 @@ import androidx.core.content.FileProvider
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.text.SimpleDateFormat
 import kotlin.system.exitProcess
 
 /** Todokanai
@@ -46,15 +44,6 @@ suspend fun getThumbnail_td(file: File,width:Int = 100,height:Int = 100): Bitmap
         BitmapFactory.decodeFile(file.absolutePath), width, height)
 }
 
-fun durationText_td(duration:Int?):String{
-    if(duration == null){
-        return "null"
-    } else if(duration < 3600000){
-        return SimpleDateFormat("mm:ss").format(duration)
-    }else {
-        return SimpleDateFormat("hh:mm:ss").format(duration)
-    }
-}
 
 /**
  *  looper.
@@ -104,6 +93,8 @@ fun isPermissionGranted_td(activity: Activity, permission: String):Boolean{
 
 
 /** requestCode를 111로 냅둬도 무방한게 정말 맞는지 확인 필요
+ *
+ *  permissionNotice : 권한이 필요함을 사용자에게 알림
  *
  * system에 permission n개를 한번에 요청함
  **/
