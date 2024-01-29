@@ -1,9 +1,9 @@
-
 /** 이 method들은 독립적으로 사용 가능함 */
 
 import java.io.File
 import java.io.FileInputStream
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -25,25 +25,43 @@ fun getFilenameForPath_td(path: String): String =
         path.length // parameter is used exclusively. Substring produced till n - 1 characters are reached.
     ).toString()
 
-/** Todokanai */
-fun readableFileSize_td(size: Long): String {
-    if (size <= 0) return "0"
+
+/** Todokanai
+ *
+ * File.length() 에만 사용할 것 **/
+fun Long.readableFileSize_td():String{
+    if (this <= 0) return "0"
     val units = arrayOf("B", "kB", "MB", "GB", "TB")
-    val digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
+    val digitGroups = (log10(this.toDouble()) / log10(1024.0)).toInt()
     return DecimalFormat("#,##0.#").format(
-        size / 1024.0.pow(digitGroups.toDouble())
+        this / 1024.0.pow(digitGroups.toDouble())
     ) + " " + units[digitGroups]
+}
+
+/** Todokanai **/
+fun durationText_td(duration:Int?):String{
+    if(duration == null){
+        return "null"
+    } else if(duration < 3600000){
+        return SimpleDateFormat("mm:ss").format(duration)
+    }else {
+        return SimpleDateFormat("hh:mm:ss").format(duration)
+    }
 }
 
 
 /** Todokanai
  *
- * files:Array <<File>> 과 하위 경로의 파일의 크기 합 */
-fun getTotalSize_td(files: Array<File>): Long {
+ *  Array< File > 과 하위 경로의 파일의 크기 합
+ *
+ *  directory가 아닐 경우는 file 자체의 크기 반환
+ * */
+fun Array<File>.getTotalSize_td():Long{
     var totalSize: Long = 0
-    for (file in files) {
+    for (file in this) {
         if (file.isDirectory) {
-            totalSize += getTotalSize_td(file.listFiles() ?: emptyArray())
+            totalSize += file.listFiles()?.getTotalSize_td() ?: 0
+
         } else {
             totalSize += file.length()
         }
@@ -54,20 +72,10 @@ fun getTotalSize_td(files: Array<File>): Long {
 /** Todokanai
  *
  * sort 적용된 fileList를 반환
- *
- *  BY_DEFAULT = 1
- *  BY_NAME_ASCENDING = 2
- *  BY_NAME_DESCENDING = 3
- *  BY_SIZE_ASCENDING = 4
- *  BY_SIZE_DESCENDING = 5
- *  BY_TYPE_ASCENDING = 6
- *  BY_TYPE_DESCENDING = 7
- *  BY_DATE_ASCENDING = 8
- *  BY_DATE_DESCENDING = 9
  * */
 fun sortedFileList_td(
     files:Array<File>,
-    sortMode:Int
+    sortMode:String?
 ):List<File>{
     /** 하위 디렉토리 포함한 크기 */
     fun File.getTotalSize(): Long {
@@ -89,33 +97,34 @@ fun sortedFileList_td(
         return size
     }
     return when(sortMode){
-        1 ->{
+        "BY_DEFAULT" ->{
             files.sortedWith (compareBy({it.isFile},{it.name}))
         }
-        2 ->{
+        "BY_NAME_ASCENDING" ->{
             files.sortedBy{it.name}
         }
-        3 ->{
+        "BY_NAME_DESCENDING" ->{
             files.sortedByDescending{it.name}
         }
-        4 ->{
+        "BY_SIZE_ASCENDING" ->{
             files.sortedBy{ it.getTotalSize() }
         }
-        5 ->{
+        "BY_SIZE_DESCENDING" ->{
             files.sortedByDescending { it.getTotalSize() }
         }
-        6 ->{
+        "BY_TYPE_ASCENDING"->{
             files.sortedBy{it.extension}
         }
-        7 ->{
+        "BY_TYPE_DESCENDING" ->{
             files.sortedByDescending { it.extension }
         }
-        8 ->{
+        "BY_DATE_ASCENDING" ->{
             files.sortedBy{it.lastModified()}
         }
-        9 ->{
+        "BY_DATE_DESCENDING" ->{
             files.sortedByDescending { it.lastModified() }
         } else -> {
+            println("sortMode value error : $sortMode")
             files.toList()
         }
     }
@@ -167,7 +176,10 @@ fun getFileArray_td(file:File):Array<File>{
     }
 }
 
-/** Todokanai */
+/** Todokanai
+ *
+ *  경로의 Tree를 반환
+ * */
 fun dirTree_td(currentPath:File): List<File> {
     val result = mutableListOf<File>()
     var now = currentPath
@@ -226,8 +238,8 @@ fun compressFilesRecursivelyToZip_td(files: Array<File>, zipFile: File) {
  *
  * 경로가 접근 가능할 경우 true 반환
  * **/
-fun isAccessible_td(file: File): Boolean {
-    return file.listFiles() != null
+fun File.isAccessible_td():Boolean{
+    return this.listFiles() != null
 }
 
 /**
